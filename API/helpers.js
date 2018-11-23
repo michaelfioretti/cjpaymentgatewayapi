@@ -123,10 +123,7 @@ module.exports = {
         })
     },
     checkInvoiceForPayment: (tx, invoice) => {
-        console.log("tx.asset type: ", tx.asset_type)
-        console.log("amount: ", tx.amount)
-        return
-        if (tx.type === 'payment' && tx.asset_type && tx.amount === "0.0000001") {
+        if (tx.type === 'payment' && tx.asset_code === 'CJS' && parseFloat(tx.amount) === invoice.cjTotal) {
             console.log("invoice has been paid! Updating...")
 
             Helpers.sendInvoicePaymentToVendor(invoice, tx.amount)
