@@ -3,6 +3,8 @@ const StellarSdk = require('stellar-sdk');
 const server = new StellarSdk.Server('https://horizon.stellar.org');
 StellarSdk.Network.usePublicNetwork();
 
+const CJAsset = new StellarSdk.Asset(config.cjAssetCode, config.cjIssuer)
+
 const CryptoJS = require('crypto-js')
 const axios = require('axios')
 
@@ -104,17 +106,25 @@ module.exports = {
                 let txsForAccount = await server.payments()
                     .forAccount(i.paymentAddress)
                     .call()
+                    .catch(function() {
+                    	return console.log("needs funding...")
+                    })
 
-                let lastTx = txsForAccount.records[txsForAccount.records.length - 1]
-                console.log("# txs: ", txsForAccount.records.length)
-                console.log("checked at " + new Date().toLocaleString())
+                if(txsForAccount) {
+	                let lastTx = txsForAccount.records[txsForAccount.records.length - 1]
+	                console.log("# txs: ", txsForAccount.records.length)
+	                console.log("checked at " + new Date().toLocaleString())
 
-                Helpers.checkInvoiceForPayment(lastTx, i)
+	                Helpers.checkInvoiceForPayment(lastTx, i)
+                }
             })
         })
     },
     checkInvoiceForPayment: (tx, invoice) => {
-        if (tx.type === 'payment' && tx.asset_type === config.requiredAssetType && tx.amount === "0.0000001") {
+    	console.log("tx.asset type: ", tx.asset_type)
+    	console.log("amount: ", tx.amount)
+    	return
+        if (tx.type === 'payment' && tx.asset_type && tx.amount === "0.0000001") {
             console.log("invoice has been paid! Updating...")
 
             Helpers.sendInvoicePaymentToVendor(invoice, tx.amount)
@@ -142,7 +152,7 @@ module.exports = {
 
         let transaction = new StellarSdk.TransactionBuilder(accountFromStellar).addOperation(StellarSdk.Operation.payment({
                 destination: invoice.vendorAddress,
-                asset: StellarSdk.Asset.native(),
+                asset: CJAsset,
                 amount: amount
             }))
             .build();
