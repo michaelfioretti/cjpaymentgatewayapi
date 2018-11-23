@@ -48,7 +48,7 @@ module.exports = {
         try {
             let decrypted = await Helpers.decrypt(user.wallet.mnemonic, req.body.password)
             if (!decrypted) {
-                return res.status(500).send({
+                return res.status(401).send({
                     error: "Password incorrect"
                 })
             }
@@ -57,7 +57,7 @@ module.exports = {
             const address = wallet.getPublicKey(0)
 
             if (address != user.wallet.address) {
-                return res.status(500).send({
+                return res.status(401).send({
                     error: "The password you provided has decrypted a mnemonic that is not associated with your account"
                 })
             }
@@ -71,7 +71,7 @@ module.exports = {
             })
 
         } catch (e) {
-            return res.status(500).send({
+            return res.status(401).send({
                 error: "Password incorrect"
             })
         }
