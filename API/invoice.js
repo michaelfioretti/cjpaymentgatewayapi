@@ -76,15 +76,15 @@ module.exports = {
         });
     },
     get: (req, res) => {
-    	let id
+        let id
 
-    	try{
-    		id = new MongoClient.ObjectID(req.params.id)
-    	} catch(e) {
-    		return res.status(500).send({
-    			error: "Ill-formed invoice ID"
-    		})
-    	}
+        try {
+            id = new MongoClient.ObjectID(req.params.id)
+        } catch (e) {
+            return res.status(500).send({
+                error: "Ill-formed invoice ID"
+            })
+        }
 
         db.collection('invoices').findOne({
             '_id': new MongoClient.ObjectID(req.params.id)
@@ -97,8 +97,20 @@ module.exports = {
 
             const cjPrice = await Helpers.getPriceOfCjs()
             const amountInCjs = math.eval(doc.total / cjPrice).toFixed(6)
-            
+
             doc.cjTotal = amountInCjs
+
+            db.collection("invoices").updateOne({
+                '_id': new MongoClient.ObjectID(req.params.id)
+            }, {
+                $set: {
+                    cjPrice: cjPrice
+                }
+            }, function(err, updateResponse) {
+                if (err) {
+                    console.log("error saving invoice: ", err)
+                }
+            });
 
             return res.status(200).send({
                 invoice: doc
@@ -109,6 +121,12 @@ module.exports = {
         db.collection('invoices').findOne({
             '_id': new MongoClient.ObjectID(req.params.id)
         }, function(err, doc) {
+            if (err) {
+                return res.status(500).send({
+                    error: "ObjectID is malformed"
+                })
+            }
+
             return res.status(200).send({
                 status: doc.status
             })

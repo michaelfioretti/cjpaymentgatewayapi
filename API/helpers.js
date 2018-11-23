@@ -109,8 +109,7 @@ module.exports = {
                     .forAccount(i.paymentAddress)
                     .call()
                     .catch(function(e) {
-                    	console.log("error: ", e)
-                        return console.log("needs funding...")
+                        return console.log(i.paymentAddress + "needs funding...")
                     })
 
                 if (txsForAccount) {
