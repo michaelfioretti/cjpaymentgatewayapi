@@ -2,6 +2,8 @@
 const StellarSdk = require('stellar-sdk');
 const server = new StellarSdk.Server('https://horizon.stellar.org');
 StellarSdk.Network.usePublicNetwork();
+const StellarHDWallet = require('stellar-hd-wallet')
+
 
 const CJAsset = new StellarSdk.Asset(config.cjAssetCode, config.cjIssuer)
 
@@ -106,24 +108,24 @@ module.exports = {
                 let txsForAccount = await server.payments()
                     .forAccount(i.paymentAddress)
                     .call()
-                    .catch(function() {
-                    	return console.log("needs funding...")
+                    .catch(function(e) {
+                        return console.log("needs funding...")
                     })
 
-                if(txsForAccount) {
-	                let lastTx = txsForAccount.records[txsForAccount.records.length - 1]
-	                console.log("# txs: ", txsForAccount.records.length)
-	                console.log("checked at " + new Date().toLocaleString())
+                if (txsForAccount) {
+                    let lastTx = txsForAccount.records[txsForAccount.records.length - 1]
+                    console.log("# txs: ", txsForAccount.records.length)
+                    console.log("checked at " + new Date().toLocaleString())
 
-	                Helpers.checkInvoiceForPayment(lastTx, i)
+                    Helpers.checkInvoiceForPayment(lastTx, i)
                 }
             })
         })
     },
     checkInvoiceForPayment: (tx, invoice) => {
-    	console.log("tx.asset type: ", tx.asset_type)
-    	console.log("amount: ", tx.amount)
-    	return
+        console.log("tx.asset type: ", tx.asset_type)
+        console.log("amount: ", tx.amount)
+        return
         if (tx.type === 'payment' && tx.asset_type && tx.amount === "0.0000001") {
             console.log("invoice has been paid! Updating...")
 
@@ -167,3 +169,32 @@ module.exports = {
         console.log("tx sent to vendor for invoice " + invoice._id)
     }
 }
+
+
+/*
+Uncomment if you want to set up trustline for a payment address
+ 
+
+console.log("give me 10 seconds...")
+setTimeout(async function() {
+    let secret = await Helpers.decrypt("U2FsdGVkX18vlJvpbW/Ojh+r2rXf+BVtevqq2rt6OX/tbgqQvapuez7YhW1d7y0lgVN+faSyP8BVkjafBP8UPjeVjgo65IsLyAF8IHv2i7w=", config.encryptionKey)
+    let accountFromStellar = await server.loadAccount("GCDBXTCH5QQOQ7ZHHRV4BYF7SVJHVSURUABJOT25HP5KX2Z2LGL3O4Z4")
+    let keypair = StellarSdk.Keypair.fromSecret(secret);
+
+    var transaction = new StellarSdk.TransactionBuilder(accountFromStellar)
+        .addOperation(StellarSdk.Operation.changeTrust({
+            asset: CJAsset
+        }))
+        .build();
+
+    transaction.sign(keypair);
+
+    let transactionResult = await server.submitTransaction(transaction)
+        .catch(e => {
+            console.log("there was an error setting up trustline for account " + uid)
+            console.log("error: ", e)
+        })
+    console.log("trustline set up")
+}, 10000)
+
+*/
