@@ -104,7 +104,7 @@ module.exports = {
                 '_id': new MongoClient.ObjectID(req.params.id)
             }, {
                 $set: {
-                    cjPrice: cjPrice
+                    cjTotal: cjTotal
                 }
             }, function(err, updateResponse) {
                 if (err) {
