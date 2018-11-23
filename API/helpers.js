@@ -3,10 +3,9 @@ const StellarSdk = require('stellar-sdk');
 const server = new StellarSdk.Server('https://horizon.stellar.org');
 StellarSdk.Network.usePublicNetwork();
 const StellarHDWallet = require('stellar-hd-wallet')
-
-
 const CJAsset = new StellarSdk.Asset(config.cjAssetCode, config.cjIssuer)
 
+const math = require('mathjs')
 const CryptoJS = require('crypto-js')
 const axios = require('axios')
 
@@ -123,7 +122,10 @@ module.exports = {
         })
     },
     checkInvoiceForPayment: (tx, invoice) => {
-        if (tx.type === 'payment' && tx.asset_code === 'CJS' && parseFloat(tx.amount) === invoice.cjTotal) {
+    	let invoiceTotal = math.round(invoice.cjTotal, 8)
+    	let paidAmount = math.round(tx.amount, 8)
+
+        if (tx.type === 'payment' && tx.asset_code === 'CJS' && paidAmount === invoiceTotal) {
             console.log("invoice has been paid! Updating...")
 
             Helpers.sendInvoicePaymentToVendor(invoice, tx.amount)
