@@ -101,17 +101,15 @@ module.exports = {
             }
         }).toArray(function(err, invoices) {
             invoices.forEach(async i => {
-                if (i.paymentAddress === 'GDVWHZ3MD3JWGBE7KPMAYS337PLDYOUW5QUZY7DAQ3BQQLDNN4ZX3IXW') {
-                    let txsForAccount = await server.payments()
-                        .forAccount(i.paymentAddress)
-                        .call()
+                let txsForAccount = await server.payments()
+                    .forAccount(i.paymentAddress)
+                    .call()
 
-                    let lastTx = txsForAccount.records[txsForAccount.records.length - 1]
-                    console.log("# txs: ", txsForAccount.records.length)
-                    console.log("checked at " + new Date().toLocaleString())
+                let lastTx = txsForAccount.records[txsForAccount.records.length - 1]
+                console.log("# txs: ", txsForAccount.records.length)
+                console.log("checked at " + new Date().toLocaleString())
 
-                    Helpers.checkInvoiceForPayment(lastTx, i)
-                }
+                Helpers.checkInvoiceForPayment(lastTx, i)
             })
         })
     },

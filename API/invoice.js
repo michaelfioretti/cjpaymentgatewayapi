@@ -12,7 +12,7 @@ module.exports = {
 
         let decrypted = await Helpers.decrypt(vendor.wallet.mnemonic, req.body.password)
         if (!decrypted) {
-            return res.status(500).send({
+            return res.status(401).send({
                 error: "Password incorrect"
             })
         }
