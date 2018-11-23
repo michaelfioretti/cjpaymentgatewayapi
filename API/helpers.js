@@ -20,7 +20,6 @@ const requiredFields = {
 
 module.exports = {
     connectToDb: () => {
-        console.log("here we go")
         MongoClient.connect(dbUrl, {
             useNewUrlParser: true
         }, function(err, client) {

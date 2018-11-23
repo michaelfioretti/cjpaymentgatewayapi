@@ -36,7 +36,6 @@ app.use((req, res, next) => {
 
 // Connect to database
 Helpers.connectToDb()
-return
 
 // Start watching for addresses
 Helpers.startInvoiceWatchCron()
