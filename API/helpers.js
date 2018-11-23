@@ -9,7 +9,7 @@ const axios = require('axios')
 // Database
 const Mongo = require('mongodb')
 const MongoClient = require('mongodb').MongoClient;
-const dbUrl = `mongodb://${config.dburls[config.env]}`;
+const dbUrl = config.dburls[config.env];
 const dbName = 'cjpaymentgateway';
 
 const requiredFields = {
@@ -20,10 +20,14 @@ const requiredFields = {
 
 module.exports = {
     connectToDb: () => {
+        console.log("here we go")
         MongoClient.connect(dbUrl, {
             useNewUrlParser: true
         }, function(err, client) {
-            console.log("Connected successfully to db");
+            if (err) {
+                console.log("error connecting to db: ", err)
+            }
+
             db = client.db(dbName);
         });
     },
