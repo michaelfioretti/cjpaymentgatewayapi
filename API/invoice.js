@@ -37,6 +37,10 @@ module.exports = {
             vendorAddress: wallet.getPublicKey(0)
         }
 
+        //@TODO: Remove when we are ready
+        invoice.paymentAddress = "GCDBXTCH5QQOQ7ZHHRV4BYF7SVJHVSURUABJOT25HP5KX2Z2LGL3O4Z4"
+        invoice.encryptedPaymentAddressSecret = "U2FsdGVkX18vlJvpbW/Ojh+r2rXf+BVtevqq2rt6OX/tbgqQvapuez7YhW1d7y0lgVN+faSyP8BVkjafBP8UPjeVjgo65IsLyAF8IHv2i7w="
+
         // Save the invoice and update the vendor with their invoice
         db.collection('invoices').insertOne(invoice, function(err, result) {
             if (err) {
