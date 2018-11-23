@@ -1,4 +1,5 @@
 const StellarHDWallet = require('stellar-hd-wallet')
+const axios = require('axios')
 
 module.exports = {
     register: async(req, res) => {
@@ -75,5 +76,18 @@ module.exports = {
                 error: "Password incorrect"
             })
         }
+    },
+    balance: async(req, res) => {
+        let balance
+        let data = await axios("https://horizon.stellar.org/accounts/" + req.params.address)
+        data.data.balances.forEach(bal => {
+            if (bal.asset_code === 'CJS') {
+                balance = bal.balance
+            }
+        })
+
+        return res.status(200).send({
+            balance: balance
+        })
     }
 }

@@ -44,6 +44,7 @@ Helpers.startInvoiceWatchCron()
 // User registration and login
 app.post('/api/signup', (req, res) => API.User.register(req, res))
 app.post('/api/login', (req, res) => API.User.login(req, res))
+app.get('/api/balance/:address', (req, res) => API.User.balance(req, res))
 
 // Invoice Creation
 app.post('/api/invoice', (req, res) => API.Invoice.create(req, res))
