@@ -20,16 +20,12 @@ const requiredFields = {
 
 module.exports = {
     connectToDb: () => {
-        if (config.env != 'development') {
-            console.log("connecting to prod db...")
-        } else {
-            MongoClient.connect(dbUrl, {
-                useNewUrlParser: true
-            }, function(err, client) {
-                console.log("Connected successfully to db");
-                db = client.db(dbName);
-            });
-        }
+        MongoClient.connect(dbUrl, {
+            useNewUrlParser: true
+        }, function(err, client) {
+            console.log("Connected successfully to db");
+            db = client.db(dbName);
+        });
     },
     checkRequiredFields: (type, data) => {
         if (!requiredFields[type]) return null
@@ -119,9 +115,9 @@ module.exports = {
     checkInvoiceForPayment: (tx, invoice) => {
         if (tx.type === 'payment' && tx.asset_type === config.requiredAssetType && tx.amount === "0.0000001") {
             console.log("invoice has been paid! Updating...")
-            
+
             Helpers.sendInvoicePaymentToVendor(invoice, tx.amount)
-            
+
             db.collection("invoices").updateOne({
                 '_id': new Mongo.ObjectID(invoice._id)
             }, {
@@ -130,13 +126,13 @@ module.exports = {
                 }
             }, async function(err, updateResponse) {
                 if (!err) {
-                	console.log('updated')
+                    console.log('updated')
                 }
             });
         }
     },
-    sendInvoicePaymentToVendor: async (invoice, amount) => {
-    	console.log("sending payment to vendor")
+    sendInvoicePaymentToVendor: async(invoice, amount) => {
+        console.log("sending payment to vendor")
         // Send balance of the invoice to the vendor
         let decryptedSecret = await Helpers.decrypt(invoice.encryptedPaymentAddressSecret, config.encryptionKey)
         let sourceKeypair = StellarSdk.Keypair.fromSecret(decryptedSecret);
