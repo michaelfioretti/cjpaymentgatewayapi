@@ -113,9 +113,6 @@ module.exports = {
 
                 if (txsForAccount) {
                     let lastTx = txsForAccount.records[txsForAccount.records.length - 1]
-                    console.log("# txs: ", txsForAccount.records.length)
-                    console.log("checked at " + new Date().toLocaleString())
-
                     Helpers.checkInvoiceForPayment(lastTx, i)
                 }
             })
