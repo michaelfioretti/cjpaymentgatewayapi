@@ -122,6 +122,7 @@ module.exports = {
         })
     },
     checkInvoiceForPayment: (tx, invoice) => {
+    	if(!invoice.cjTotal || tx.amount) return
     	let invoiceTotal = math.round(invoice.cjTotal, 8)
     	let paidAmount = math.round(tx.amount, 8)
 
