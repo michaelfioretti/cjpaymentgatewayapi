@@ -101,9 +101,9 @@ module.exports = {
     checkForUnfilledInvoices: async() => {
         db.collection('txs').find({
             'status': {
-                $ne: 'filled',
-                type: 'invoice'
-            }
+                $ne: 'filled'
+            },
+            'type': 'invoice'
         }).toArray(function(err, invoices) {
             if(err) {
                 console.log("there was an error checking for unfilled invoices: ", err)
