@@ -81,6 +81,15 @@ module.exports = {
             })
         })
     },
+    getVendorTxs: (id) => {
+        return new Promise(async(resolve, reject) => {
+            db.collection('transactions').find({
+                'vendorId': id
+            }).toArray(function(err, invoices) {
+                return resolve(invoices)
+            })
+        })
+    },
     getPriceOfCjs: () => {
         let cjId = config.coinMarketCap.cjId
 
@@ -119,9 +128,9 @@ module.exports = {
         })
     },
     checkInvoiceForPayment: (tx, invoice) => {
-    	if(!invoice.cjTotal || tx.amount) return
-    	let invoiceTotal = math.round(invoice.cjTotal, 8)
-    	let paidAmount = math.round(tx.amount, 8)
+        if (!invoice.cjTotal || tx.amount) return
+        let invoiceTotal = math.round(invoice.cjTotal, 8)
+        let paidAmount = math.round(tx.amount, 8)
 
         if (tx.type === 'payment' && tx.asset_code === 'CJS' && paidAmount === invoiceTotal) {
             console.log("invoice has been paid! Updating...")
@@ -132,10 +141,26 @@ module.exports = {
                 '_id': new Mongo.ObjectID(invoice._id)
             }, {
                 $set: {
-                    status: "filled"
+                    status: "filled",
+                    customerAddress: tx.funder
                 }
             }, async function(err, updateResponse) {
                 if (!err) {
+                    let txToSave = {
+                        invoiceId: invoice._id,
+                        date: new Date().toISOString(),
+                        type: 'payment',
+                        amount: tx.amount,
+                        link: tx._links.transaction.href
+                    }
+
+                    // Save the invoice and update the vendor with their invoice
+                    db.collection('transactions').insertOne(txToSave, function(txSaveError, txSaveResult) {
+                        if (txSaveError) {
+                            console.log("error saving tx response: ", txSaveError)
+                        }
+                    })
+
                     console.log('updated')
                 }
             });
