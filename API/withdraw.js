@@ -55,7 +55,7 @@ module.exports = {
         }
 
         // Save the invoice and update the vendor with their invoice
-        db.collection('transactions').insertOne(txToSave, function(txSaveError, txSaveResult) {
+        db.collection('txs').insertOne(txToSave, function(txSaveError, txSaveResult) {
             if (txSaveError) {
                 return res.status(500).send({
                 	error: txSaveError

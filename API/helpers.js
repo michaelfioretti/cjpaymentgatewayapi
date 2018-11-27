@@ -73,7 +73,7 @@ module.exports = {
     },
     getVendorInvoices: (ids) => {
         return new Promise(async(resolve, reject) => {
-            db.collection('transactions').find({
+            db.collection('txs').find({
                 '_id': {
                     '$in': ids
                 }
@@ -147,7 +147,7 @@ module.exports = {
                     }
 
                     // Save the invoice and update the vendor with their invoice
-                    db.collection('transactions').insertOne(txToSave, function(txSaveError, txSaveResult) {
+                    db.collection('txs').insertOne(txToSave, function(txSaveError, txSaveResult) {
                         if (txSaveError) {
                             console.log("error saving tx response: ", txSaveError)
                         }
