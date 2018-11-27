@@ -21,7 +21,8 @@ module.exports = {
                 address: address,
                 mnemonic: encryptedMnemonic
             },
-            email: req.body.email
+            email: req.body.email,
+            invoiceIds: []
         }
 
         db.collection('vendors').insertOne(user, function(err, result) {

@@ -74,18 +74,25 @@ module.exports = {
     getVendorInvoices: (id) => {
         return new Promise(async(resolve, reject) => {
             db.collection('invoices').find({
-                'vendorId': id
+                '_id': {
+                    '$in': ids
+                }
             }).toArray(function(err, invoices) {
                 return resolve(invoices)
             })
+            // db.collection('invoices').find({
+            //     'vendorId': id
+            // }).toArray(function(err, invoices) {
+            //     return resolve(invoices)
+            // })
         })
     },
     getVendorTxs: (id) => {
         return new Promise(async(resolve, reject) => {
             db.collection('transactions').find({
                 'vendorId': id
-            }).toArray(function(err, invoices) {
-                return resolve(invoices)
+            }).toArray(function(err, txs) {
+                return resolve(txs)
             })
         })
     },
