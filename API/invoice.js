@@ -24,6 +24,7 @@ module.exports = {
 
         // Save the invoice and return it
         let invoice = {
+            date: new Date().toISOString(),
             vendorId: req.body.vendorId,
             total: req.body.total,
             clientName: req.body.clientName,
@@ -43,7 +44,7 @@ module.exports = {
         invoice.encryptedPaymentAddressSecret = "U2FsdGVkX18vlJvpbW/Ojh+r2rXf+BVtevqq2rt6OX/tbgqQvapuez7YhW1d7y0lgVN+faSyP8BVkjafBP8UPjeVjgo65IsLyAF8IHv2i7w="
 
         // Save the invoice and update the vendor with their invoice
-        db.collection('invoices').insertOne(invoice, function(err, result) {
+        db.collection('txs').insertOne(invoice, function(err, result) {
             if (err) {
                 console.log("error saving invoice: ", error)
                 return res.status(500).send({
@@ -52,28 +53,10 @@ module.exports = {
                 })
             }
 
-            vendor.invoiceIds.push(result.insertedId)
-
-            db.collection("vendors").updateOne({
-                '_id': vendorId
-            }, {
-                $set: {
-                    invoiceIds: vendor.invoiceIds
-                }
-            }, function(err, updateResponse) {
-                if (err) {
-                    console.log("error saving invoice ids to vendor: ", err)
-                    return res.status(500).send({
-                        error: err,
-                        message: "There was an error. Please try again"
-                    })
-                }
-
-                return res.status(200).send({
-                    message: "Invoice saved successfully",
-                    invoice: invoice
-                })
-            });
+            return res.status(200).send({
+                message: "Invoice saved successfully",
+                invoice: invoice
+            })
         });
     },
     get: (req, res) => {
@@ -87,7 +70,7 @@ module.exports = {
             })
         }
 
-        db.collection('invoices').findOne({
+        db.collection('txs').findOne({
             '_id': new MongoClient.ObjectID(req.params.id)
         }, async function(err, doc) {
             if (!doc) {
@@ -101,7 +84,7 @@ module.exports = {
 
             doc.cjTotal = amountInCjs
 
-            db.collection("invoices").updateOne({
+            db.collection("txs").updateOne({
                 '_id': new MongoClient.ObjectID(req.params.id)
             }, {
                 $set: {
@@ -119,7 +102,7 @@ module.exports = {
         });
     },
     getStatus: (req, res) => {
-        db.collection('invoices').findOne({
+        db.collection('txs').findOne({
             '_id': new MongoClient.ObjectID(req.params.id)
         }, function(err, doc) {
             if (err) {

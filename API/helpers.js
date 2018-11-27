@@ -71,23 +71,7 @@ module.exports = {
             });
         })
     },
-    getVendorInvoices: (ids) => {
-        return new Promise(async(resolve, reject) => {
-            db.collection('invoices').find({
-                '_id': {
-                    '$in': ids
-                }
-            }).toArray(function(err, invoices) {
-                return resolve(invoices)
-            })
-            // db.collection('invoices').find({
-            //     'vendorId': id
-            // }).toArray(function(err, invoices) {
-            //     return resolve(invoices)
-            // })
-        })
-    },
-    getVendorTxs: (id) => {
+    getVendorInvoices: (id) => {
         return new Promise(async(resolve, reject) => {
             db.collection('transactions').find({
                 'vendorId': id
@@ -113,7 +97,7 @@ module.exports = {
         setInterval(Helpers.checkForUnfilledInvoices, 7 * 1000)
     },
     checkForUnfilledInvoices: async() => {
-        db.collection('invoices').find({
+        db.collection('txs').find({
             'status': {
                 $ne: 'filled'
             }
@@ -143,7 +127,7 @@ module.exports = {
 
             Helpers.sendInvoicePaymentToVendor(invoice, tx.amount)
 
-            db.collection("invoices").updateOne({
+            db.collection("txs").updateOne({
                 '_id': new Mongo.ObjectID(invoice._id)
             }, {
                 $set: {
