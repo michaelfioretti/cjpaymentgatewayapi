@@ -48,7 +48,7 @@ module.exports = {
 
         let txToSave = {
         	vendorId: vendorId,
-            date: new Date().toISOString(),
+            paidAt: new Date().toISOString(),
             type: 'withdraw',
             amount: amount,
             link: transactionResult._links.transaction.href

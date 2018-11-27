@@ -36,7 +36,8 @@ module.exports = {
             status: 'unfilled',
             paymentIndex: index,
             encryptedPaymentAddressSecret: encryptedPaymentAddressSecret,
-            vendorAddress: wallet.getPublicKey(0)
+            vendorAddress: wallet.getPublicKey(0),
+            type: 'invoice'
         }
 
         //@TODO: Remove when we are ready
@@ -69,7 +70,7 @@ module.exports = {
                         message: "There was an error. Please try again"
                     })
                 }
-                
+
                 return res.status(200).send({
                     message: "Invoice saved successfully",
                     invoice: invoice

@@ -124,7 +124,7 @@ module.exports = {
         let invoiceTotal = math.round(invoice.cjTotal, 8)
         let paidAmount = math.round(tx.amount, 8)
 
-        if (tx.type === 'payment' && tx.asset_code === 'CJS' && paidAmount === invoiceTotal) {
+        if (tx.type === 'invoice' && tx.asset_code === 'CJS' && paidAmount === invoiceTotal) {
             console.log("invoice has been paid! Updating...")
 
             Helpers.sendInvoicePaymentToVendor(invoice, tx.amount)
@@ -134,25 +134,12 @@ module.exports = {
             }, {
                 $set: {
                     status: "filled",
-                    customerAddress: tx.funder
+                    customerAddress: tx.funder,
+                    paidAt: new Date().toISOString(),
+                    link: tx._links.transaction.href
                 }
             }, async function(err, updateResponse) {
                 if (!err) {
-                    let txToSave = {
-                        invoiceId: invoice._id,
-                        date: new Date().toISOString(),
-                        type: 'payment',
-                        amount: tx.amount,
-                        link: tx._links.transaction.href
-                    }
-
-                    // Save the invoice and update the vendor with their invoice
-                    db.collection('txs').insertOne(txToSave, function(txSaveError, txSaveResult) {
-                        if (txSaveError) {
-                            console.log("error saving tx response: ", txSaveError)
-                        }
-                    })
-
                     console.log('updated')
                 }
             });
