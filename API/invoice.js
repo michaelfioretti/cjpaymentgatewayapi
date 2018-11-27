@@ -25,7 +25,7 @@ module.exports = {
         // Save the invoice and return it
         let invoice = {
             date: new Date().toISOString(),
-            vendorId: req.body.vendorId,
+            vendorId: vendorId,
             total: req.body.total,
             clientName: req.body.clientName,
             lineItems: req.body.lineItems,
