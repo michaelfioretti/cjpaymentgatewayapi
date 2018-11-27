@@ -62,7 +62,8 @@ module.exports = {
                 })
             } else {
             	return res.status(200).send({
-            		message: "Withdraw successful"
+            		message: "Withdraw successful",
+            		tx: txToSave
             	})
             }
         })
