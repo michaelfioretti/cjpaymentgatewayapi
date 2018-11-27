@@ -64,7 +64,7 @@ module.exports = {
             }
 
             // Get invoices
-            let invoices = await Helpers.getVendorInvoices(user._id)
+            let invoices = await Helpers.getVendorInvoices(user.invoiceIds)
             let txs = await Helpers.getVendorTxs(user._id)
             user.invoices = invoices
             user.txs = txs

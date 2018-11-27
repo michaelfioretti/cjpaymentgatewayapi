@@ -71,7 +71,7 @@ module.exports = {
             });
         })
     },
-    getVendorInvoices: (id) => {
+    getVendorInvoices: (ids) => {
         return new Promise(async(resolve, reject) => {
             db.collection('invoices').find({
                 '_id': {
