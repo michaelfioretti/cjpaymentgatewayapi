@@ -10,6 +10,8 @@ module.exports = {
     initiate: async(req, res) => {
         const amount = req.body.amount
         const destination = req.body.address
+        console.log("destination: ", destination)
+        console.log("amount: ", amount)
 
         let vendorId = new MongoClient.ObjectID(req.body.vendorId)
         let vendor = await Helpers.getUserByField(vendorId, '_id')
@@ -38,7 +40,10 @@ module.exports = {
 
         let transactionResult = await server.submitTransaction(transaction)
             .catch(e => {
-                return console.log(e.response.data.extras)
+            	return res.status(500).send({
+            		message: "There was an error processing your withdraw",
+            		error: e.response.data.extras
+            	})
             })
 
         let txToSave = {
