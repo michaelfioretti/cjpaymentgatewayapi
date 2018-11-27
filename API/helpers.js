@@ -71,12 +71,10 @@ module.exports = {
             });
         })
     },
-    getVendorInvoices: (ids) => {
+    getVendorInvoices: (id) => {
         return new Promise(async(resolve, reject) => {
             db.collection('txs').find({
-                '_id': {
-                    '$in': ids
-                }
+                'vendorId': Mongo.ObjectID(id)
             }).toArray(function(err, invoices) {
                 return resolve(invoices)
             })
