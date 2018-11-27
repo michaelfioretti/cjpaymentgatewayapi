@@ -65,7 +65,7 @@ module.exports = {
 
             // Get invoices
             let invoices = await Helpers.getVendorInvoices(user.invoiceIds)
-            user.invoices = invoices
+            user.txs = invoices
             
             return res.status(200).send({
                 user: user

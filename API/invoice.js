@@ -53,10 +53,29 @@ module.exports = {
                 })
             }
 
-            return res.status(200).send({
-                message: "Invoice saved successfully",
-                invoice: invoice
-            })
+            vendor.invoiceIds.push(result.insertedId)
+
+            db.collection("vendors").updateOne({
+                '_id': vendorId
+            }, {
+                $set: {
+                    invoiceIds: vendor.invoiceIds
+                }
+            }, function(err, updateResponse) {
+                if (err) {
+                    console.log("error saving invoice ids to vendor: ", err)
+                    return res.status(500).send({
+                        error: err,
+                        message: "There was an error. Please try again"
+                    })
+                }
+                
+                return res.status(200).send({
+                    message: "Invoice saved successfully",
+                    invoice: invoice
+                })
+            });
+
         });
     },
     get: (req, res) => {
