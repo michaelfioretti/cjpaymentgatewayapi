@@ -24,6 +24,7 @@ module.exports = {
 
         // Save the invoice and return it
         let invoice = {
+            vendorId: req.body.vendorId,
             total: req.body.total,
             clientName: req.body.clientName,
             lineItems: req.body.lineItems,

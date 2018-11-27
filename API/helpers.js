@@ -18,7 +18,8 @@ const dbName = 'cjpaymentgateway';
 const requiredFields = {
     '/api/signup': ['email', 'password', 'name'],
     '/api/login': ['email', 'password'],
-    '/api/invoice': ['total', 'lineItems', 'clientName', 'clientAddress', 'details', 'password']
+    '/api/invoice': ['total', 'lineItems', 'clientName', 'clientAddress', 'details', 'password'],
+    '/api/withdraw': ['amount', 'address', 'vendorId', 'password']
 }
 
 module.exports = {
@@ -70,12 +71,10 @@ module.exports = {
             });
         })
     },
-    getVendorInvoices: (ids) => {
+    getVendorInvoices: (id) => {
         return new Promise(async(resolve, reject) => {
             db.collection('invoices').find({
-                '_id': {
-                    '$in': ids
-                }
+                'vendorId': id
             }).toArray(function(err, invoices) {
                 return resolve(invoices)
             })

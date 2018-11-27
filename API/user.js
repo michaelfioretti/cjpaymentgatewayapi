@@ -21,8 +21,7 @@ module.exports = {
                 address: address,
                 mnemonic: encryptedMnemonic
             },
-            email: req.body.email,
-            invoiceIds: []
+            email: req.body.email
         }
 
         db.collection('vendors').insertOne(user, function(err, result) {
@@ -64,9 +63,10 @@ module.exports = {
             }
 
             // Get invoices
-            let invoices = await Helpers.getVendorInvoices(user.invoiceIds)
+            let invoices = await Helpers.getVendorInvoices(user._id)
             let txs = await Helpers.getVendorTxs(user._id)
             user.invoices = invoices
+            user.txs = txs
             
             return res.status(200).send({
                 user: user
