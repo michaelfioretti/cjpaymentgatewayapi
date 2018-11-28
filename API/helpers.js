@@ -118,6 +118,7 @@ module.exports = {
                     })
 
                 if (txsForAccount) {
+                    console.log(txsForAccount)
                     let lastTx = txsForAccount.records[txsForAccount.records.length - 1]
                     Helpers.checkInvoiceForPayment(lastTx, i)
                 }
@@ -177,14 +178,15 @@ module.exports = {
 }
 
 
-/*
-Uncomment if you want to set up trustline for a payment address
- 
 
-console.log("give me 10 seconds...")
+//Uncomment if you want to set up trustline for a payment address
+ 
+/*console.log("give me 10 seconds...")
 setTimeout(async function() {
-    let secret = await Helpers.decrypt("U2FsdGVkX18vlJvpbW/Ojh+r2rXf+BVtevqq2rt6OX/tbgqQvapuez7YhW1d7y0lgVN+faSyP8BVkjafBP8UPjeVjgo65IsLyAF8IHv2i7w=", config.encryptionKey)
-    let accountFromStellar = await server.loadAccount("GCDBXTCH5QQOQ7ZHHRV4BYF7SVJHVSURUABJOT25HP5KX2Z2LGL3O4Z4")
+    let secret = await Helpers.decrypt("U2FsdGVkX1/G4n2uaOM0GcGvH2V1JqSeoYwnMXxVnznPNgeHyx3ggkw8Jy4gh1od4bT4HIa0lHXKtNuktaokdAop/RP1oIhL0JSkEZE5nRo=", config.encryptionKey)
+    console.log("secret: ", secret)
+    let accountFromStellar = await server.loadAccount("GDQC7OZZPSQFQO2MOLWHBSVJ6MCEWUJ7UY6KXVQYSUVKQLIIA54TQ2PC")
+    console.log(accountFromStellar)
     let keypair = StellarSdk.Keypair.fromSecret(secret);
 
     var transaction = new StellarSdk.TransactionBuilder(accountFromStellar)
@@ -197,10 +199,8 @@ setTimeout(async function() {
 
     let transactionResult = await server.submitTransaction(transaction)
         .catch(e => {
-            console.log("there was an error setting up trustline for account " + uid)
-            console.log("error: ", e)
+            return console.log("error: ", e)
         })
     console.log("trustline set up")
 }, 10000)
-
 */

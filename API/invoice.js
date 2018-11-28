@@ -41,8 +41,8 @@ module.exports = {
         }
 
         //@TODO: Remove when we are ready
-        invoice.paymentAddress = "GCDBXTCH5QQOQ7ZHHRV4BYF7SVJHVSURUABJOT25HP5KX2Z2LGL3O4Z4"
-        invoice.encryptedPaymentAddressSecret = "U2FsdGVkX18vlJvpbW/Ojh+r2rXf+BVtevqq2rt6OX/tbgqQvapuez7YhW1d7y0lgVN+faSyP8BVkjafBP8UPjeVjgo65IsLyAF8IHv2i7w="
+        invoice.paymentAddress = "GDQC7OZZPSQFQO2MOLWHBSVJ6MCEWUJ7UY6KXVQYSUVKQLIIA54TQ2PC"
+        invoice.encryptedPaymentAddressSecret = "U2FsdGVkX1/G4n2uaOM0GcGvH2V1JqSeoYwnMXxVnznPNgeHyx3ggkw8Jy4gh1od4bT4HIa0lHXKtNuktaokdAop/RP1oIhL0JSkEZE5nRo="
 
         // Save the invoice and update the vendor with their invoice
         db.collection('txs').insertOne(invoice, function(err, result) {
