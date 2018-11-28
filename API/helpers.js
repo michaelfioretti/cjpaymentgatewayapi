@@ -141,7 +141,7 @@ module.exports = {
                     status: "filled",
                     customerAddress: tx.funder,
                     paidAt: new Date().toISOString(),
-                    link: tx._links.transaction.href
+                    link: "https://stellar.expert/explorer/public/tx/" + tx.transaction_hash
                 }
             }, async function(err, updateResponse) {
                 if (!err) {

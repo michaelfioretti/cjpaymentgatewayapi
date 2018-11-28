@@ -51,7 +51,7 @@ module.exports = {
             paidAt: new Date().toISOString(),
             type: 'withdraw',
             amount: amount,
-            link: transactionResult._links.transaction.href
+            link: "https://stellar.expert/explorer/public/tx/" + transactionResult.transaction_hash
         }
 
         // Save the invoice and update the vendor with their invoice
