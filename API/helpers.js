@@ -108,7 +108,7 @@ module.exports = {
             }
 
             if(!invoices) return
-
+            
             invoices.forEach(async i => {
                 let txsForAccount = await server.payments()
                     .forAccount(i.paymentAddress)
@@ -125,11 +125,11 @@ module.exports = {
         })
     },
     checkInvoiceForPayment: (tx, invoice) => {
-        if (!invoice.cjTotal || tx.amount) return
-        let invoiceTotal = math.round(invoice.cjTotal, 8)
-        let paidAmount = math.round(tx.amount, 8)
+        if (!invoice.cjTotal || !tx.amount) return
+        let invoiceTotal = math.round(invoice.cjTotal, 10)
+        let paidAmount = math.round(tx.amount, 10)
 
-        if (tx.type === 'invoice' && tx.asset_code === 'CJS' && paidAmount === invoiceTotal) {
+        if (invoice.type === 'invoice' && tx.asset_code === 'CJS' && paidAmount === invoiceTotal) {
             console.log("invoice has been paid! Updating...")
 
             Helpers.sendInvoicePaymentToVendor(invoice, tx.amount)
