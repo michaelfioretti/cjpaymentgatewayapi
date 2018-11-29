@@ -93,6 +93,14 @@ module.exports = {
         db.collection('txs').findOne({
             '_id': new MongoClient.ObjectID(req.params.id)
         }, async function(err, doc) {
+
+            if (err) {
+                console.log("error fetching: ", err)
+                return res.status(500).send({
+                    error: "There was an error fetching the invoice. Please try again"
+                })
+            }
+
             if (!doc) {
                 return res.status(404).send({
                     message: "Invoice with id '" + req.params.id + "' not found"
@@ -113,12 +121,16 @@ module.exports = {
             }, function(err, updateResponse) {
                 if (err) {
                     console.log("error saving invoice: ", err)
+                    return res.status(500).send({
+                        error: "There was an error fetching the invoice. Please try again"
+                    })
                 }
+
+                return res.status(200).send({
+                    invoice: doc
+                })
             });
 
-            return res.status(200).send({
-                invoice: doc
-            })
         });
     },
     getStatus: (req, res) => {
