@@ -56,6 +56,14 @@ app.get('/api/invoice/:id', (req, res) => API.Invoice.get(req, res))
 // Withdraw Endpoint
 app.post('/api/withdraw', (req, res) => API.Withdraw.initiate(req, res))
 
+// Get price of CJS
+app.get('/api/price', async (req, res) => {
+	let price = await Helpers.getPriceOfCjs()
+	return res.send({
+		price: price
+	})
+})
+
 // Start he server
 const port = process.env.PORT || 1235
 server.listen(port)
